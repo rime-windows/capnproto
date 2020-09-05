@@ -56,7 +56,7 @@ private:
     Function<void(Function<void()>)> initializer;
     kj::Maybe<kj::Exception> exception;
 
-    unsigned int refcount;
+    volatile long refcount;
     // Owned by the parent thread and the child thread.
 
     void unref();
