@@ -73,7 +73,15 @@ set(kj-parse_headers
 set(kj-std_headers
   std/iostream.h
 )
-add_library(kj ${kj_sources})
+
+if (MSVC)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -fPIC")
+endif()
+set(target_type STATIC)
+
+add_library(kj ${target_type} ${kj_sources})
 add_library(CapnProto::kj ALIAS kj)
 # TODO(cleanup): Use cxx_std_14 once it's safe to require cmake 3.8.
 target_compile_features(kj PUBLIC cxx_generic_lambdas)
@@ -105,7 +113,7 @@ set(kj-test_headers
 set(kj-test-compat_headers
   compat/gtest.h
 )
-add_library(kj-test ${kj-test_sources})
+add_library(kj-test ${target_type} ${kj-test_sources})
 add_library(CapnProto::kj-test ALIAS kj-test)
 target_link_libraries(kj-test PUBLIC kj)
 # Ensure the library has a version set to match autotools build
@@ -134,7 +142,7 @@ set(kj-async_headers
   timer.h
 )
 if(NOT CAPNP_LITE)
-  add_library(kj-async ${kj-async_sources})
+  add_library(kj-async ${target_type} ${kj-async_sources})
   add_library(CapnProto::kj-async ALIAS kj-async)
   target_link_libraries(kj-async PUBLIC kj)
   if(UNIX)
@@ -160,7 +168,7 @@ set(kj-http_headers
   compat/http.h
 )
 if(NOT CAPNP_LITE)
-  add_library(kj-http ${kj-http_sources})
+  add_library(kj-http ${target_type} ${kj-http_sources})
   add_library(CapnProto::kj-http ALIAS kj-http)
   target_link_libraries(kj-http PUBLIC kj-async kj)
   # Ensure the library has a version set to match autotools build
@@ -179,7 +187,7 @@ set(kj-tls_headers
   compat/tls.h
 )
 if(NOT CAPNP_LITE)
-  add_library(kj-tls ${kj-tls_sources})
+  add_library(kj-tls ${target_type} ${kj-tls_sources})
   add_library(CapnProto::kj-tls ALIAS kj-tls)
   target_link_libraries(kj-tls PUBLIC kj-async)
   if (WITH_OPENSSL)
@@ -201,7 +209,7 @@ set(kj-gzip_headers
   compat/gzip.h
 )
 if(NOT CAPNP_LITE)
-  add_library(kj-gzip ${kj-gzip_sources})
+  add_library(kj-gzip ${target_type} ${kj-gzip_sources})
   add_library(CapnProto::kj-gzip ALIAS kj-gzip)
 
   find_package(ZLIB)

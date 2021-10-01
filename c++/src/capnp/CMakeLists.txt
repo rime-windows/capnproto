@@ -62,7 +62,11 @@ set(capnp_schemas
   schema.capnp
   stream.capnp
 )
-add_library(capnp ${capnp_sources})
+
+set(target_type STATIC)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+add_library(capnp ${target_type} ${capnp_sources})
 add_library(CapnProto::capnp ALIAS capnp)
 target_link_libraries(capnp PUBLIC kj)
 #make sure external consumers don't need to manually set the include dirs
@@ -104,7 +108,7 @@ set(capnp-rpc_schemas
   persistent.capnp
 )
 if(NOT CAPNP_LITE)
-  add_library(capnp-rpc ${capnp-rpc_sources})
+  add_library(capnp-rpc ${target_type} ${capnp-rpc_sources})
   add_library(CapnProto::capnp-rpc ALIAS capnp-rpc)
   target_link_libraries(capnp-rpc PUBLIC capnp kj-async kj)
   # Ensure the library has a version set to match autotools build
@@ -127,7 +131,7 @@ set(capnp-json_schemas
   compat/json.capnp
 )
 if(NOT CAPNP_LITE)
-  add_library(capnp-json ${capnp-json_sources})
+  add_library(capnp-json ${target_type} ${capnp-json_sources})
   add_library(CapnProto::capnp-json ALIAS capnp-json)
   target_link_libraries(capnp-json PUBLIC capnp kj-async kj)
   # Ensure the library has a version set to match autotools build
@@ -145,7 +149,7 @@ set(capnp-websocket_headers
   compat/websocket-rpc.h
 )
 if(NOT CAPNP_LITE)
-  add_library(capnp-websocket ${capnp-websocket_sources})
+  add_library(capnp-websocket ${target_type} ${capnp-websocket_sources})
   add_library(CapnProto::capnp-websocket ALIAS capnp-websocket)
   target_link_libraries(capnp-websocket PUBLIC capnp capnp-rpc kj-http kj-async kj)
   # Ensure the library has a version set to match autotools build
@@ -170,7 +174,7 @@ set(capnpc_sources
   serialize-text.c++
 )
 if(NOT CAPNP_LITE)
-  add_library(capnpc ${capnpc_sources})
+  add_library(capnpc ${target_type} ${capnpc_sources})
   target_link_libraries(capnpc PUBLIC capnp kj)
   # Ensure the library has a version set to match autotools build
   set_target_properties(capnpc PROPERTIES VERSION ${VERSION})
