@@ -63,6 +63,10 @@ set(capnp_schemas
   stream.capnp
 )
 
+if (NOT MSVC)
+  add_compile_options( -fPIC )
+endif()
+
 set(target_type STATIC)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 

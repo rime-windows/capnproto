@@ -1,6 +1,8 @@
 # Kenton's personal backup script.
 /backup.sh
 
+build/
+
 # Eclipse-generated stuff.
 .cproject
 .project
